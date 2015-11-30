@@ -4,8 +4,8 @@ public class TweetToDB {
 	public static Connection createConnection() throws Exception{
 		Connection conn = null;
 		String userName = "twitterMap";
-		String password = "cloudcomputing";
-		String hostname = "cs6998cloud.ckv1ixbhxyon.us-east-1.rds.amazonaws.com";
+		String password = "**********";
+		String hostname = "***********";
 		String port = "3306";
 		String dbName = "twitterMap1";
 		String jdbcUrl = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
