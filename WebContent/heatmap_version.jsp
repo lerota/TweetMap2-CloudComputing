@@ -29,11 +29,8 @@
       
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=visualization"></script>
-
-    
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-	
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>	
 	<script src="js/markerclusterer.js" type="text/javascript"></script>
     
     <!-- Bootstrap Core CSS -->
