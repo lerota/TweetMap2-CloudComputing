@@ -34,8 +34,8 @@ public class ServerDispatch {
 
 	static String dbName = "twitterMap1";
 	static String userName = "twitterMap";
-	static String password = "cloudcomputing";
-	static String hostname = "cs6998cloud.ckv1ixbhxyon.us-east-1.rds.amazonaws.com";
+	static String password = "**********";
+	static String hostname = "**********";
 	static String port = "3306";
 	static String jdbcUrl = "jdbc:mysql://" + hostname + ":" +
 					port + "/" + dbName + "?user=" + userName + "&password=" + password;
@@ -127,10 +127,10 @@ public class ServerDispatch {
     public static JSONObject getTrends(int woe) throws TwitterException{
 		ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-          .setOAuthConsumerKey("SomQhEqKHwE3NUMVXbQuUpiAC")
-          .setOAuthConsumerSecret("2MHLApfmuqB5lVMkVxTr9UCuhcd5gLowJZjYHFTxvEaScyFH3A")
-          .setOAuthAccessToken("1253902718-NmquT94d9X2eMG1jY6dsU5CoLbqEcrUqnwwenSq")
-          .setOAuthAccessTokenSecret("tCCVrN3TxhzFh3gkttLdgFp1DZonrCj3negMlrIrpNaZX");
+          .setOAuthConsumerKey("***********")
+          .setOAuthConsumerSecret("**********")
+          .setOAuthAccessToken("************")
+          .setOAuthAccessTokenSecret("*************");
 		Twitter twitter = new TwitterFactory(cb.build()).getInstance();
 	    Trends trends = twitter.getPlaceTrends(woe); //NYC
 	    String name = trends.getTrends()[0].getName();  
