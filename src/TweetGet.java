@@ -64,10 +64,10 @@ public final class TweetGet {
     	
     	 ConfigurationBuilder cb = new ConfigurationBuilder();
          cb.setDebugEnabled(true)
-           .setOAuthConsumerKey("cZREF9Mq4d5BOfc7SSdl39ljQ")
-           .setOAuthConsumerSecret("DMnWwh7h2rKun05qoxjQwvjMClI4LANFJRiNOB0eoGYPp6s1vt")
-           .setOAuthAccessToken("1253902718-vHf7e6OEFVI9coNtFQh2JvhSO5pkfeC4Q8FmJnq")
-           .setOAuthAccessTokenSecret("ix0ug0WHm4lrQThFRKTkAtppcHjFDVqP8P4ksLoId18SP");
+           .setOAuthConsumerKey("************")
+           .setOAuthConsumerSecret("*************")
+           .setOAuthAccessToken("***********")
+           .setOAuthAccessTokenSecret("**************");
          
         if(sqs == null){
   	    	sqs = new AmazonSQSClient(credentials);
