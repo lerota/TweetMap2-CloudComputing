@@ -21,10 +21,10 @@ public class TrendGet{
 	public static void main(String[] args) throws TwitterException, SQLException, NamingException, FileNotFoundException, IOException {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-          .setOAuthConsumerKey("SomQhEqKHwE3NUMVXbQuUpiAC")
-          .setOAuthConsumerSecret("2MHLApfmuqB5lVMkVxTr9UCuhcd5gLowJZjYHFTxvEaScyFH3A")
-          .setOAuthAccessToken("1253902718-NmquT94d9X2eMG1jY6dsU5CoLbqEcrUqnwwenSq")
-          .setOAuthAccessTokenSecret("tCCVrN3TxhzFh3gkttLdgFp1DZonrCj3negMlrIrpNaZX");
+          .setOAuthConsumerKey("**********")
+          .setOAuthConsumerSecret("************")
+          .setOAuthAccessToken("************")
+          .setOAuthAccessTokenSecret("************");
 	    try {
 			Connection conn = TweetToDB.createConnection();
 		
