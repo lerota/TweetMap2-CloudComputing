@@ -29,7 +29,6 @@
       
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=visualization"></script>
-<!--    <script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js" type="text/javascript"></script> -->
 
     
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
@@ -75,7 +74,6 @@
 	var markerTrds;
 
 	var chatClient = new WebSocket("ws://54.164.147.68:8080/aws");
-	<!-- var chatClient = new WebSocket("http://tweetmap-env.elasticbeanstalk.com");-->
 	<!-- var chatClient = new WebSocket("ws://localhost:8080/twitMapTest4/aws");-->
 	
 	var markers = [];
@@ -112,28 +110,15 @@
 	  		var flag = rawJSON[first].flag;
 	  		break;
 	  	}
-	  	//if(flag == "location" || flag == "trends"){
 	  	if(flag == "location"){
 	  		for (var loc in rawJSON){
 			    	var lat = rawJSON[loc].latitude;
 			    	var lng = rawJSON[loc].longitude;
-			    	//finance = Number(rawJSON[loc].finance);
-			 		//entertainment = Number(rawJSON[loc].entertainment);
-			 		//sports = Number(rawJSON[loc].sports);
-			 		//technology = Number(rawJSON[loc].technology);
 			    	if(lat&&lng){
 			    		latlng = new google.maps.LatLng(lat,lng);
 			    		taxiDataMap.push(latlng);
 			    	}
 	  		}
-	  		//stringObj.push('Finance');
-		    //numberObj.push(finance);
-		    //stringObj.push('Entertainment');
-		    //numberObj.push(entertainment);
-		    //stringObj.push('Sports');
-		    //numberObj.push(sports);
-		    //stringObj.push('Technology');
-		    //numberObj.push(technology);    
 		    if(taxiDataMap){
 		    	pointArrayMap.clear();
 		    	for (i=0; i<taxiDataMap.length; i++){
@@ -151,8 +136,6 @@
 		    		lng = Number(lng);
 		    		latlng = {lat: lat, lng: lng};
 					var trdeach = {latlng:latlng, trd:trd};
-		    		//trdeach.push(latlng);
-		    		//trdeach.push(trd);
 		    		taxiDataTrend.push(trdeach);
 		    	}		    	
 	  		}
@@ -171,7 +154,6 @@
 		    		taxiData.push(latlngi);
 		    	}	        
 		    } 
-  
         	update();
         	if(taxiData){
         		pointArrayScore.clear();
@@ -219,8 +201,6 @@
 		    title: score
 		});
 	 
-		  
-	<!--  marker.setMap(map); -->
 	}
 	
 	function update() {
@@ -238,7 +218,6 @@
 		  markers.push(marker);
 		  markerCluster = new MarkerClusterer(map, markers);
 		  
-		// var count = 0;
 		  for(i=0; i<taxiDataTrend.length;i++){
 			  var tmp = taxiDataTrend.pop();
 			  console.log(tmp.latlng);
@@ -250,62 +229,12 @@
 				    icon: 'http://findicons.com/files/icons/2330/open_source_icons_gcons/32/flag.png'
 				});
 			  markerTrds.setMap(map);
-
-			  //console.log(i[0]);
-			  //console.log(i[1]);		  
-			//  count++;
-		  }
-		  
-		<!--  marker.setMap(map); -->
-		}
+		  }		  
+	}
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
     </script>  
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>    
- <!--     <script type="text/javascript">
-	  google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(init);
-
-      function init(){
-    	  var data = new google.visualization.DataTable();
-    	  data.addColumn('string', 'Trend');
-          data.addColumn('number', 'Number');
-          for(i = 0; i < stringObj.length; i++)
-              data.addRow([stringObj[i], numberObj[i]]); 
-          var options = {
-                  backgroundColor: 'transparent',
-            	  fontName:'Arial',
-            	  slices: [{color: '#A4D3EE',offset:0.1}, {color: '#B0E2FF',offset:0.2}, {color: '#C3E4ED',offset:0.05}, {color: '#42C0FB',offset:0.05}],   
-          		  legendTextColor: 'white',
-          		  legend: {position:'none'}
-          		  };
-          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-          var button = document.getElementById('dropdownMenu1');
-          function drawChart() {
-       		button.disabled = true;
-              google.visualization.events.addListener(chart, 'ready',
-                    function() {
-                      button.disabled = false;
-                    });
-              chart.draw(data, options);
-          }
-          drawChart();
-
-          button.onclick = function() {
-        	  kwselect('ok');
-              data = new google.visualization.DataTable();
-              data.addColumn('string', 'Trend');
-              data.addColumn('number', 'Number');
-              console.log(data)
-              for(i = 0; i < stringObj.length; i++)
-                  data.addRow([stringObj[i], numberObj[i]]);
-              drawChart();
-          }
-     }          
-      
-     
-     </script>   -->
-     
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>      
   </head>
 
   <body>

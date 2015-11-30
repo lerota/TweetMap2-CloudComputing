@@ -1,6 +1,5 @@
-
-import java.io.*;
 import java.sql.*;
+
 public class TweetToDB {
 	public static Connection createConnection() throws Exception{
 		Connection conn = null;

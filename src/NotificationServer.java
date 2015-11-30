@@ -17,24 +17,18 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-//@ServerEndpoint(value = "/aws", encoders = (TwitterEncoder.class))
-
 public class NotificationServer extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
-
 	public NotificationServer() {
 		super();
-		// TODO Auto-generated constructor stub
 	}  
     
-//    @Override
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-    	//Get the message type header.
-    	
+		
+    			//Get the message type header.  	
     			String messagetype = request.getHeader("x-amz-sns-message-type");
     			System.out.println("Got a message: " + messagetype);
     			//If message doesn't have the message type header, don't process it.
@@ -71,22 +65,10 @@ public class NotificationServer extends HttpServlet{
     			
     			// Process the message based on type.
     			if (messagetype.equals("Notification")) {
-    				//TODO: Do something with the Message and Subject.
-    				//Just log the subject (if it exists) and the message.
     				String logMsgAndSubject = ">>Notification received from topic " + msg.getTopicArn();
     				if (msg.getSubject() != null)
     					logMsgAndSubject += " Subject: " + msg.getSubject();
     				logMsgAndSubject += " Message: " + msg.getMessage();
-
-//    				JSONObject jsonObject = new JSONObject();
-//                    try {
-//                  	    jsonObject.put("flag", "sentiment");
-//                  	    jsonObject.put("score", msg.getMessage().);
-//                    } catch (JSONException e) {
-						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//                    }
-//                    String mes = jsonObject.toString();
     				String mes = msg.getMessage();
 
 					ServerDispatch.broadcastData(mes);
@@ -116,10 +98,8 @@ public class NotificationServer extends HttpServlet{
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		
 	}
-
 	
 	private boolean isMessageSignatureValid(SNSMessage msg) {
 

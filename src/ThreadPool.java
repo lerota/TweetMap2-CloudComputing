@@ -45,36 +45,20 @@ public class ThreadPool implements Runnable{
 	{
 		    while (!taskExecutor.isShutdown()) {
 		    	try{
-		    		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(Url);
-		    		List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
-//			        List<Message> messages = sqs.receiveMessage(receiveMessageRequest.withMessageAttributeNames("All")).getMessages();
-			        for (Message message : messages) {
-//			        	for (Entry<String, MessageAttributeValue> entry : message.getMessageAttributes().entrySet()) {
-//			                if(entry.getKey().equals("GetSentiment"))
-//			                {
-			                    //try {
-			                		String TweetId = message.getBody();
-			                		System.out.println(TweetId);
-			                        Runnable worker = new GetSentiment(TweetId);
-			                        //each thread wait for next runnable and executes it's run method
-			                        //worker.run();
-			                        //System.out.println("Starting GetSentiment for TweetId " + TweetId);
-			                        String messageReceiptHandle = message.getReceiptHandle();
-			                        sqs.deleteMessage(new DeleteMessageRequest(Url, messageReceiptHandle));
-			                        System.out.println("    MessageId:     " + message.getMessageId() + " deleted");
-			                        taskExecutor.execute(worker);
-			                    //} catch (InterruptedException e) {
-			                        	//ignore
-			                    //}
-//			                }
-//			            }
-			        }
-			        Thread.sleep(2000);
-		    	}catch (InterruptedException e) {
-                	//ignore
-		    	}
-			        
-		        
+			    		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(Url);
+			    		List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
+				        for (Message message : messages) {
+	                		String TweetId = message.getBody();
+	                		System.out.println(TweetId);
+	                        Runnable worker = new GetSentiment(TweetId);
+	                        String messageReceiptHandle = message.getReceiptHandle();
+	                        sqs.deleteMessage(new DeleteMessageRequest(Url, messageReceiptHandle));
+	                        System.out.println("    MessageId:     " + message.getMessageId() + " deleted");
+	                        taskExecutor.execute(worker);
+	                        }
+				        Thread.sleep(2000);
+		    		}catch (InterruptedException e) {
+		    	}		        	        
 		        System.out.println("taskExecutor is getting messages");
 		    }
 		}

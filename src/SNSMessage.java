@@ -1,7 +1,5 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
-
 public class SNSMessage {
     @JsonProperty("Type")
     private String type = "";

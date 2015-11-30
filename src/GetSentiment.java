@@ -26,24 +26,17 @@ import com.amazonaws.util.json.JSONObject;
 
 public class GetSentiment implements Runnable{
 	
-//	private AmazonDynamoDBClient client;
-
-    private AmazonSNSClient snsClient;
-	 
+    private AmazonSNSClient snsClient;	 
     private String TweetId;
     
     public GetSentiment(String pTweetId){
+    	
     	TweetId = pTweetId;
-//    	AWSCredentialsProvider credentialsProvider = new ClasspathPropertiesFileCredentialsProvider();
-//    	if (client == null) {
-//            client = new AmazonDynamoDBClient(credentialsProvider);
-//        }
     	AWSCredentials credentials = new ProfileCredentialsProvider("default").getCredentials();
-        
+       
 	    snsClient = new AmazonSNSClient(credentials);		                           
 	    snsClient.setRegion(Region.getRegion(Regions.US_EAST_1));
-	    
-	    
+	        
     }
     
     public void run() {
@@ -52,33 +45,27 @@ public class GetSentiment implements Runnable{
 		try {
 			jsonObject = new JSONObject(TweetId);
 		} catch (JSONException e4) {
-			// TODO Auto-generated catch block
 			e4.printStackTrace();
 		}
     	
-//    	Map<String,AttributeValue> key = new HashMap<String,AttributeValue>();
-//    	key.put("TweetId", new AttributeValue().withS(TweetId));
-//    	GetItemRequest getItemRequest = new GetItemRequest().withKey(key).withTableName("Tweet2");
-//    	Map<String,AttributeValue> Tweet = client.getItem(getItemRequest).getItem();
     	String MessageText = null;
 		try {
 			MessageText = jsonObject.getString("text");
 		} catch (JSONException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		
     	String Id = null;
 		try {
 			Id = jsonObject.getString("id");
 		} catch (JSONException e3) {
-			// TODO Auto-generated catch block
 			e3.printStackTrace();
 		}
+		
     	String Longitude = null;
 		try {
 			Longitude = jsonObject.getString("longitude");
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -86,7 +73,6 @@ public class GetSentiment implements Runnable{
 		try {
 			Latitude = jsonObject.getString("latitude");
 		} catch (JSONException e5) {
-			// TODO Auto-generated catch block
 			e5.printStackTrace();
 		}
             	
@@ -94,24 +80,18 @@ public class GetSentiment implements Runnable{
 		try {
 			alchemy = AlchemyAPI.GetInstanceFromFile("/home/ec2-user/api_key.txt");
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
         Document doc;
 		try {
 			doc = alchemy.TextGetTextSentiment(MessageText);
-			String score = getStringFromDocument(doc);
-			
-//			Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
-//    		expressionAttributeValues.put(":val1", new AttributeValue().withS(score)); 
-    		
+			String score = getStringFromDocument(doc);   		
 			System.out.println("score: " +  score);
 			
-			//store score into db
-			
+			//store score into db		
 			PreparedStatement preparedStatement = null;
  			final Connection conn = TweetToDB.createConnection();
  			String updateSQL = "UPDATE TwitterMap1 SET Score = ? WHERE Id = ?";
@@ -119,8 +99,6 @@ public class GetSentiment implements Runnable{
  			preparedStatement.setString(1, score);
  			preparedStatement.setLong(2, Long.parseLong(Id));
  			preparedStatement.executeUpdate();
- 		//	preparedStatement = conn.prepareStatement("update TwitterMap1 set Score = " + score + "where Id = " + Long.parseLong(Id) + ";");
- 		//	System.out.println("0");
 			
 			String topicArn = "arn:aws:sns:us-east-1:994295696375:MyNewTopic";
 			JSONObject json = new JSONObject();
@@ -133,33 +111,25 @@ public class GetSentiment implements Runnable{
           	    json.put("score", score);
           	    locOBJ.put("loc", json);
             } catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
             }
-//			PublishRequest publishRequest = new PublishRequest(topicArn, Id + "," + score);
             PublishRequest publishRequest = new PublishRequest(topicArn, locOBJ.toString());
 			PublishResult publishResult = snsClient.publish(publishRequest);
 		} catch (XPathExpressionException | IOException | SAXException
 				| ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Alchemy parsing error: " + e.toString());
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
  // utility method
  	private static String getStringFromDocument(Document doc) {
- 	//try {
- 	//DOMSource domSource = new DOMSource(doc);
- 	
+ 
  		NodeList nodeList = doc.getDocumentElement().getChildNodes();
  		for (int i = 0; i < nodeList.getLength(); i++) {
  			Node node = nodeList.item(i);

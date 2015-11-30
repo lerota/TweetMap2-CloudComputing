@@ -1,7 +1,5 @@
-
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,7 +29,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-//@ServerEndpoint(value = "/TwitMap")
 @ServerEndpoint(value = "/aws")
 public class ServerDispatch {
 
@@ -59,12 +56,10 @@ public class ServerDispatch {
                 session.getId());
     }
     
-   // public static void broadcastData(String locOBJ) throws InterruptedException, EncodeException {
     public static void broadcastData(String locOBJ){
     	for (Session s : sessionslist){
                 try {
 					s.getBasicRemote().sendText(locOBJ);
-	                //Thread.sleep(2000);
                 } catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -73,30 +68,24 @@ public class ServerDispatch {
     
     @OnMessage
     public void onMessage(String message, Session session) throws IOException, InterruptedException, TwitterException {
-    	//System.out.println("onMessage");
     	sessionslist.add(session);
     	keyword = message;
     	JSONObject locOBJ = new JSONObject();
-    	//int count = 1;
     	String selectSQL = null;
 		for (Session peer : session.getOpenSessions()) {
-            //while (true) {
                 System.out.println("sending ...");
                 try {
                 	  if (keyword.equals("United States")){
-                	    //locOBJ = getTrends(23424977); 
           				selectSQL = "SELECT * FROM TrendMap1 t1 WHERE t1.WOEID = '23424977';";
         				locOBJ = selectTrd(selectSQL);
                         System.out.println("United States");
                         
                 	} else if (keyword.equals("France")){
-                		//locOBJ = getTrends(23424819); 
           				selectSQL = "SELECT * FROM TrendMap1 t1 WHERE t1.WOEID = '23424819';";
         				locOBJ = selectTrd(selectSQL);
                         System.out.println("France");
                         
                 	} else if (keyword.equals("United Kingdom")){
-                		//locOBJ = getTrends(23424975);
           				selectSQL = "SELECT * FROM TrendMap1 t1 WHERE t1.WOEID = '23424975';";
         				locOBJ = selectTrd(selectSQL);
                         System.out.println("United Kingdom");
@@ -113,35 +102,17 @@ public class ServerDispatch {
         						+ " WHERE t1.Topic = '" + keyword + "';";
         				locOBJ = selectLoc(selectSQL);
         			}
-        			//System.out.println(selectSQL);
-        			//resultSet = DBcontrol.doSelect(conn, selectSQL, setupStatement, resultSet);
-        			//while(resultSet.next()){
-        			//	String lng = resultSet.getString("Longitude");
-        			//	String lat = resultSet.getString("Latitude");
-        			//	//String lng = resultSet.getString(4);
-        			//	//String lat = resultSet.getString(3);
-        			//	JSONObject loc = new JSONObject();
-        				
-        			//	//add flag "location" to JSON object
-        			//	loc.put("flag", "location");
-        			//	loc.put("longitude", lng);
-        			//	loc.put("latitude", lat);
-        			//	locOBJ.put("loc"+count, loc);
-        			//	count++;
-        			//}
         		} catch (SQLException | JSONException e) {
         			e.printStackTrace();
         		}
                 peer.getBasicRemote().sendText(locOBJ.toString());
                 System.out.println(locOBJ.toString());
                 Thread.sleep(2000);
-            //}
 		}
     }
     
     @OnClose
     public void onClose(Session session) {
-    	//System.out.println("onClose");
     	sessionslist.remove(session);
     	DBcontrol.disConn(conn, setupStatement, resultSet);
         LOGGER.log(Level.INFO, "Close connection for client: {0}", 
@@ -150,7 +121,6 @@ public class ServerDispatch {
     
     @OnError
     public void onError(Throwable exception, Session session) {
-    	//System.out.println("onError");
         LOGGER.log(Level.INFO, "Error for client: {0}", session.getId());
     }
     
@@ -163,50 +133,34 @@ public class ServerDispatch {
           .setOAuthAccessTokenSecret("tCCVrN3TxhzFh3gkttLdgFp1DZonrCj3negMlrIrpNaZX");
 		Twitter twitter = new TwitterFactory(cb.build()).getInstance();
 	    Trends trends = twitter.getPlaceTrends(woe); //NYC
-	    String name = trends.getTrends()[0].getName();
-	    //List<String> currentTrends = new ArrayList<String>();    
-	    //for(Trend t: trends.getTrends()){
-	    //    String name = t.getName();
-	    //    String url = t.getURL();
-	    //    currentTrends.add(name);
-	    //    currentTrends.add(url);	   
-	        Query query = new Query(name);
-	        query.setResultType(Query.RECENT);
-	        //query.setCount(10000000);
-	        //query.setGeoCode(new GeoLocation(0, 0), 40000000, Query.KILOMETERS);
-	        QueryResult result = twitter.search(query);
-	        //for (Status tweet : result.getTweets()) {
-	        //	if(tweet.getGeoLocation()!=null)
-	        //		System.out.println(tweet.getGeoLocation() + ":" + tweet.getText());
-	        JSONObject json = new JSONObject();
-			JSONObject locOBJ = new JSONObject();
-	        //}
-	        int countTrend = 1;
-	        do{
-	        	List<Status> tweets = result.getTweets();
-	        	for(Status tweet: tweets){
-	        		if(tweet.getGeoLocation()!=null){
-	        	 		//System.out.println(tweet.getGeoLocation() + ":" + tweet.getText());
-	    	            try {
-	    	          	    json.put("flag", "trends");
-	    	          	    json.put("longitude", tweet.getGeoLocation().getLongitude());
-	    	          	    json.put("latitude", tweet.getGeoLocation().getLatitude());
-	    	          	    json.put("trend", name);
-	    	          	    locOBJ.put("loc"+countTrend, json);
-	    	            } catch (JSONException e) {
-	    					// TODO Auto-generated catch block
-	    					e.printStackTrace();
-	    	            }
-	        			countTrend++;
-	        		}
-	        		//System.out.println("Tweet: "+tweet.getText());
-	        	}
-	        	query=result.nextQuery();
-	        	if(query!=null)
-	        		result=twitter.search(query);
-	        	}while(countTrend<2);
+	    String name = trends.getTrends()[0].getName();  
+        Query query = new Query(name);
+        query.setResultType(Query.RECENT);
+        QueryResult result = twitter.search(query);
+        JSONObject json = new JSONObject();
+		JSONObject locOBJ = new JSONObject();
+        int countTrend = 1;
+        do{
+        	List<Status> tweets = result.getTweets();
+        	for(Status tweet: tweets){
+        		if(tweet.getGeoLocation()!=null){
+    	            try {
+    	          	    json.put("flag", "trends");
+    	          	    json.put("longitude", tweet.getGeoLocation().getLongitude());
+    	          	    json.put("latitude", tweet.getGeoLocation().getLatitude());
+    	          	    json.put("trend", name);
+    	          	    locOBJ.put("loc"+countTrend, json);
+    	            } catch (JSONException e) {
+    					e.printStackTrace();
+    	            }
+        			countTrend++;
+        		}
+        	}
+        	query=result.nextQuery();
+        	if(query!=null)
+        		result=twitter.search(query);
+        	}while(countTrend<2);
 	        
-	    //}
 	    return locOBJ;
 	}
     
@@ -217,8 +171,6 @@ public class ServerDispatch {
 		while(resultSet.next()){
 			String lng = resultSet.getString("Longitude");
 			String lat = resultSet.getString("Latitude");
-			//String lng = resultSet.getString(4);
-			//String lat = resultSet.getString(3);
 			JSONObject loc = new JSONObject();
 			
 			//add flag "location" to JSON object

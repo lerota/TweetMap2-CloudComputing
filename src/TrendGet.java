@@ -18,8 +18,6 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TrendGet{
 	
-	
-	//public static List<String> getTrends() throws TwitterException{
 	public static void main(String[] args) throws TwitterException, SQLException, NamingException, FileNotFoundException, IOException {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
@@ -52,7 +50,6 @@ public class TrendGet{
 						preparedStatement.executeUpdate();
 	        			count++;
 	        		}
-	        		//System.out.println("Tweet: "+tweet.getText());
 	        	}
 	        	query=result.nextQuery();
 	        	if(query!=null)
@@ -117,17 +114,8 @@ public class TrendGet{
 			        result=twitter.search(query);
 			 }while(count < 20);   */
 	    } catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	    
 	}
-//	public static void main(String[] args) throws TwitterException {
-		//List<String> getTrends = getTrends();
-//		JSONObject getTrends = getTrends();
-//		ServerDispatch.broadcastData(getTrends.toString());
-		//for(String getTrend:getTrends){
-			//System.out.println(getTrend);
-		//}
-//	}
 }

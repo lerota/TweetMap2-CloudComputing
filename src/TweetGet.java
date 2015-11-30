@@ -46,16 +46,12 @@ public final class TweetGet {
      */
 	public static int count = 0;
 	public static KeyWordManagement kwmng = new KeyWordManagement();
-//	private static SQSManager sqsManager = new SQSManager();
 	public static AmazonSQS sqs;
 	public static String Url;
 	public String lat;
 	public String lon;
-//	private static SentimentAnalyzer analyzer;
 	
     public static void main(String[] args) throws TwitterException, SQLException, NamingException, FileNotFoundException, IOException {
-    	//just fill this
-//    	analyzer = new SentimentAnalyzer();
     	AWSCredentials credentials = null;
 		 // Load the AWS credentials file
 		 try {
@@ -123,13 +119,11 @@ public final class TweetGet {
 										jsonObject.put("longitude",Double.toString(status.getGeoLocation().getLongitude()));
 										jsonObject.put("text", status.getText());
 			                      } catch (JSONException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 			                      }
 			                      sqs.sendMessage(new SendMessageRequest( Url, jsonObject.toString() ));
 								
 							} catch (SQLException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 	                      count++;
@@ -143,22 +137,18 @@ public final class TweetGet {
 	
 	             @Override
 	             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-	                 //System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
 	             }
 	
 	             @Override
 	             public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
-	                // System.out.println("Got track limitation notice:" + numberOfLimitedStatuses);
 	             }
 	
 	             @Override
 	             public void onScrubGeo(long userId, long upToStatusId) {
-	                 //System.out.println("Got scrub_geo event userId:" + userId + " upToStatusId:" + upToStatusId);
 	             }
 	
 	             @Override
 	             public void onStallWarning(StallWarning warning) {
-	                // System.out.println("Got stall warning:" + warning);
 	             }
 	
 	             @Override
